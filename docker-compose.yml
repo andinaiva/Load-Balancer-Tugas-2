@@ -1,0 +1,46 @@
+services:
+
+  app1:
+    build: ./app
+    container_name: app1
+    environment:
+      - SERVER_NAME=Server KRS Online
+      - SERVER_ID=app1
+      - PORT=3000
+      - LOAD_BALANCER_ALGORITHM=Least Connection
+      - LOAD_BALANCER_LAYER=Layer 7
+
+  app2:
+    build: ./app
+    container_name: app2
+    environment:
+      - SERVER_NAME=Server Nilai Mahasiswa
+      - SERVER_ID=app2
+      - PORT=3000
+      - LOAD_BALANCER_ALGORITHM=Least Connection
+      - LOAD_BALANCER_LAYER=Layer 7
+
+  app3:
+    build: ./app
+    container_name: app3
+    environment:
+      - SERVER_NAME=Server Jadwal Kuliah
+      - SERVER_ID=app3
+      - PORT=3000
+      - LOAD_BALANCER_ALGORITHM=Least Connection
+      - LOAD_BALANCER_LAYER=Layer 7
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-lb
+
+    ports:
+      - "80:80"
+
+    volumes:
+      - ./nginx/nginx-least-connection.conf:/etc/nginx/nginx.conf
+
+    depends_on:
+      - app1
+      - app2
+      - app3
